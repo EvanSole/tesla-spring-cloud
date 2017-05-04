@@ -9,7 +9,6 @@ Git以及Subversion.分为config-server(服务端)和config-client(客户端)两
 * maven打包并构建镜像
 ```
 mvn clean package -DskipTests=true docker:build
-
 ```
 * maven打包构建镜像并push到仓库
 ```
