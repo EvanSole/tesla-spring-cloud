@@ -1,0 +1,25 @@
+server:
+  port: 8761              # 指定该Eureka实例的端口
+spring:
+  application:
+    name: tesla-eureka-server
+eureka:
+  instance:
+    hostname: localhost   # 指定该Eureka实例的主机名
+  client:
+    register-with-eureka: false      # 在默认情况下，Eureka会将自己也作为客户端尝试注册,需要禁止该行为
+    fetch-registry: false
+    eureka-server-u-r-l-context: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    enable-self-preservation: false            # 设为false，关闭自我保护
+    eviction-interval-timer-in-ms: 30000       # 清理间隔（单位毫秒，默认是60*1000）
+    wait-time-in-ms-when-sync-empty: 0
+
+
+
+
+
+
+
+
+

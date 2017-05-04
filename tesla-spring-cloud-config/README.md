@@ -4,7 +4,6 @@
 Git以及Subversion.分为config-server(服务端)和config-client(客户端)两个部分.
 
 
-
 ## Build Step
 
 * maven打包并构建镜像
@@ -17,8 +16,7 @@ mvn clean package -DskipTests=true docker:build
 mvn clean package docker:build -DpushImage
 ```
 
-* maven打包构建镜像，将指定tag的镜像push到仓库，该命令需使用
-<imageTags><imageTag>...</imageTag></imageTags>标签
+* maven打包构建镜像，将指定tag的镜像push到仓库，该命令需使用<imageTags>标签
 ```
 mvn clean package docker:build -DpushImageTag
 ```
