@@ -1,0 +1,26 @@
+server:
+  port: 8701
+
+spring:
+  application:
+    name: tesla-config-server
+
+  cloud:
+    config:
+      label: master
+      server:
+        git:
+          uri: https://github.com/EvanSole/tesla-spring-cloud-config/
+          search-paths: tesla-config
+          username:
+          password:
+
+#        native:      # 从本地目录获取资源文件配置
+#          search-locations: classpath:/tesla-config
+
+eureka:
+  client:
+    eureka-server-u-r-l-context: http://localhost:8761/eureka/
+
+
+
