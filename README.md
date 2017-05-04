@@ -1,7 +1,8 @@
 # tesla-spring-cloud
-spring cloud 
+Tesla spring cloud 快速环境搭建Parent Project
 
-# Version
+
+# Version Describe
 | Name                                    | Version                            |
 | ---------------------------------------- | ---------------------------------- |
 | spring boot                              | 1.5.2                      |  
@@ -41,7 +42,7 @@ mvn clean package -DskipTests=true docker:build
 ### maven打包构建镜像并push到仓库
 mvn clean package docker:build -DpushImage
 
-# maven打包构建镜像，将指定tag的镜像push到仓库，该命令需使用
+### maven打包构建镜像，将指定tag的镜像push到仓库，该命令需使用
 `<imageTags><imageTag>...</imageTag></imageTags>标签`
 
 mvn clean package docker:build -DpushImageTag
