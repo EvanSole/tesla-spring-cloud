@@ -6,4 +6,4 @@ ADD ./target/tesla-spring-cloud-eureka-1.0-SNAPSHOT.jar /app/
 
 CMD ["java","-Xmx256M","-jar","/app/tesla-spring-cloud-eureka-1.0-SNAPSHOT.jar"]
 
-EXPOSE 8702
+EXPOSE 8761

@@ -1,7 +1,6 @@
 spring:
   application:
     name: tesla-config-server
-
   cloud:
     config:
       label: master
@@ -12,9 +11,17 @@ spring:
           username:
           password:
 
-#       native:      # 从本地目录获取资源文件配置
+# 如果不需要从远程git仓库获取配置，可以通过下面配置直接从本地目录获取资源文件配置
+#       native:
 #         search-locations: classpath:/tesla-config
 
+# 关闭安全验证,如果不关闭,config内置的mapped将无法访问
+management:
+ security:
+  enabled: false
+
+
+# 将tesla-config-server服务注册到eureka
 eureka:
   client:
     eureka-server-u-r-l-context: http://localhost:8761/eureka/
