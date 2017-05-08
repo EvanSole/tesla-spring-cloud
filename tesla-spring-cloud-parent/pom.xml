@@ -4,7 +4,7 @@
   <groupId>com.tesla.cloud</groupId>
   <artifactId>tesla-spring-cloud-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
 
   <name>tesla-spring-cloud-parent</name>
   <description>tesla-spring-cloud-parent</description>
