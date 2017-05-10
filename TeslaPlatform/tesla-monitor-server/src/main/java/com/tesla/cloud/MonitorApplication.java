@@ -7,7 +7,7 @@ import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboar
 import org.springframework.cloud.netflix.turbine.stream.EnableTurbineStream;
 
 @EnableTurbineStream
-@EnableHystrixDashboard
+@EnableHystrixDashboard //开启Hystrix监控
 @SpringBootApplication
 public class MonitorApplication
 {

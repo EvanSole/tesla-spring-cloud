@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.bind.RelaxedDataBinder;
@@ -24,6 +25,9 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceRegister.class);
 
+    @Autowired
+    DataSourceProperties dataSourceProperties;
+
     private PropertyValues dataSourcePropertyValues;
 
     // 数据源
@@ -38,6 +42,8 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
+        logger.info("[dataSourceProperties]-------> ", dataSourceProperties.getUrl());
+        logger.info("Dynamic DataSource Registry.");
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
         // 将主数据源添加到容器中
         targetDataSources.put("dataSource", defaultDataSource);
@@ -57,7 +63,6 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
         mpv.addPropertyValue("defaultTargetDataSource", defaultDataSource);
         mpv.addPropertyValue("targetDataSources", targetDataSources);
         beanDefinitionRegistry.registerBeanDefinition("dataSource", beanDefinition);
-        logger.info("Dynamic DataSource Registry");
     }
 
 
@@ -91,7 +96,7 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
     private void initCustomDataSources(Environment env) {
         try{
             //读取自定义数据源
-            RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(env, "custom.datasource.");
+            RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(env, "spring.custom.datasource.");
             String dsPrefixs = propertyResolver.getProperty("names");
             for (String dsPrefix : dsPrefixs.split(",")) {// 多个数据源
                 Map<String, Object> subProperties = propertyResolver.getSubProperties(dsPrefix + ".");

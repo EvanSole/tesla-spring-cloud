@@ -1,6 +1,5 @@
 package com.tesla.cloud.core.config.database;
 
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,10 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-
-/***
- * 使用Aspect切换数据源，
- */
 @Aspect
 @Component
 public class DynamicDataSourceAspect {

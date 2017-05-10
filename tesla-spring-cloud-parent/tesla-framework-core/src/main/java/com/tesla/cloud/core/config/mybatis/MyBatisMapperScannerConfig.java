@@ -2,6 +2,7 @@ package com.tesla.cloud.core.config.mybatis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
@@ -12,17 +13,14 @@ import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
 import java.util.Properties;
 
-
-/***
- * MyBatis扫描接口，使用的tk.mybatis.spring.mapper.MapperScannerConfigurer
- */
 @Configuration
 @AutoConfigureAfter(MybatisAutoConfiguration.class)
 public class MyBatisMapperScannerConfig implements EnvironmentAware {
 
     private static final Logger logger = LoggerFactory.getLogger(MyBatisMapperScannerConfig.class);
 
-    private String mybatisPackages ;
+    @Value("${mybatis.basePackage}")
+    private String mybatisPackages;
 
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
@@ -44,7 +42,8 @@ public class MyBatisMapperScannerConfig implements EnvironmentAware {
     @Override
     public void setEnvironment(Environment environment) {
         logger.info("Loading mybatis mapperScannerConfigurer.");
-        RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(environment, "mybatis");
-        mybatisPackages = propertyResolver.getProperty("basePackage");
+        RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(environment, "mybatis.");
+        mybatisPackages = propertyResolver.getProperty("basePackage","com.tesla.cloud.mapper");
+        logger.info("mybatis packages : {} " , mybatisPackages );
     }
 }

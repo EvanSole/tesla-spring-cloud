@@ -3,8 +3,10 @@ package com.tesla.cloud.core.config.mybatis;
 import org.apache.ibatis.session.ExecutorType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
-@ConfigurationProperties(prefix = MybatisProperties.MYBATIS_PREFIX)
+@Component
+@ConfigurationProperties(prefix = MybatisProperties.MYBATIS_PREFIX,ignoreUnknownFields = false)
 public class MybatisProperties {
 
     public static final String MYBATIS_PREFIX = "mybatis";
@@ -23,6 +25,11 @@ public class MybatisProperties {
      * Package to scan domain objects.
      */
     private String typeAliasesPackage;
+
+    /***
+     * base package
+     */
+    private String basePackage;
 
     /**
      * Package to scan handlers.
@@ -85,5 +92,13 @@ public class MybatisProperties {
 
     public void setExecutorType(ExecutorType executorType) {
         this.executorType = executorType;
+    }
+
+    public String getBasePackage() {
+        return basePackage;
+    }
+
+    public void setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
     }
 }

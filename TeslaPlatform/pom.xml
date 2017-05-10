@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.tesla.cloud</groupId>
     <artifactId>tesla-spring-cloud-parent</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.7</version>
   </parent>
 
   <groupId>com.tesla.cloud</groupId>
@@ -17,16 +17,17 @@
 
   <modules>
     <module>tesla-config-server</module>
+    <module>tesla-config-client</module>
     <module>tesla-gateway-server</module>
     <module>tesla-books-service</module>
     <module>tesla-account-service</module>
     <module>tesla-monitor-server</module>
-    <module>tesla-config-client</module>
+
   </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tesla.framework.version>1.1.1</tesla.framework.version>
+    <tesla.framework.version>1.0.7</tesla.framework.version>
   </properties>
 
   <build>
@@ -39,6 +40,7 @@
           <source>1.8</source>
         </configuration>
       </plugin>
+      <!-- mvn spring-boot:run -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

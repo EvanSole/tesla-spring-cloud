@@ -2,6 +2,14 @@ spring:
   application:
     name: tesla-account-server
 
+  cloud:
+    config:
+      profile: dev
+      label: master
+      discovery:
+        enabled: true   # 默认false，设为true表示使用注册中心中的configServer(这里指tesla-config-server)配置而不自己配置configServer的uri
+        service-id: tesla-config-server # 指定config server在服务发现中的serviceId，默认为：configServer
+
 eureka:
   client:
     eureka-server-u-r-l-context: http://localhost:8761/eureka/
