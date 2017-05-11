@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.bind.RelaxedDataBinder;
@@ -20,18 +19,15 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar, EnvironmentAware {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceRegister.class);
 
-    @Autowired
-    DataSourceProperties dataSourceProperties;
-
     private PropertyValues dataSourcePropertyValues;
 
-    // 数据源
+    // 主数据源
     private DataSource defaultDataSource;
+    // 自定义数据源
     private Map<String, DataSource> customDataSources = new HashMap<>();
 
     @Override
@@ -42,7 +38,6 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
-        logger.info("[dataSourceProperties]-------> ", dataSourceProperties.getUrl());
         logger.info("Dynamic DataSource Registry.");
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
         // 将主数据源添加到容器中

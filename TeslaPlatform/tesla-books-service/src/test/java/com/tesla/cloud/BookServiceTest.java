@@ -20,11 +20,10 @@ public class BookServiceTest {
     BookService bookService;
 
     @Test
-    public void testFindById() throws Exception {
+    public void testFindBooks() throws Exception {
         List<BookEntity> books = bookService.getAllBooks();
         //PageHelper.startPage(1,10);
         Assert.assertEquals("1", books.size());
-
     }
 
 }

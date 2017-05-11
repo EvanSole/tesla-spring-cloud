@@ -2,15 +2,20 @@ spring:
   application:
     name: tesla-books-server
 
-  profiles:
-    active: dev
   cloud:
     config:
       profile: dev
       label: master
-      discovery:
-        enabled: true   # 默认false，设为true表示使用注册中心中的configServer(这里指tesla-config-server)配置而不自己配置configServer的uri
-        service-id: tesla-config-server # 指定config server在服务发现中的serviceId，默认为：configServer
+      uri: http://localhost:8770
+      name: tesla-config
+
+  profiles:
+    active: dev
+
+# 关闭安全验证
+management:
+ security:
+  enabled: false
 
 eureka:
   client:

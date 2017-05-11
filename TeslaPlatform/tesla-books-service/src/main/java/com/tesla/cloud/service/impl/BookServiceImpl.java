@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-/**
- * Created by Edwin.wang on 17/5/5.
- */
+
 public class BookServiceImpl implements BookService {
 
     @Autowired

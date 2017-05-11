@@ -8,17 +8,12 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@Import(DynamicDataSourceRegister.class)
+@Import(DynamicDataSourceRegister.class)  //注册数据源
 public class BooksApplication {
 
     public static void main( String[] args )
     {
         SpringApplication.run(BooksApplication.class, args);
     }
-
-//    @Bean
-//    public DynamicDataSourceRegister dynamicDataSourceRegister(){
-//        return new DynamicDataSourceRegister();
-//    }
 
 }

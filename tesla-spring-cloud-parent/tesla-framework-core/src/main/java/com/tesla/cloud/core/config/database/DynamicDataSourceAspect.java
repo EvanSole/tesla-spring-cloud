@@ -14,7 +14,7 @@ public class DynamicDataSourceAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceAspect.class);
 
-    //前置通知
+    //Before advice
     @Before("@annotation(dataSource)")
     public void changeDataSource(JoinPoint point, TargetDataSource dataSource) throws Throwable {
         String dataSourceId = dataSource.dbShareField().getValue();
@@ -26,7 +26,7 @@ public class DynamicDataSourceAspect {
         }
     }
 
-    //后置通知
+    //after advice
     @After("@annotation(dataSource)")
     public void restoreDataSource(JoinPoint point, TargetDataSource dataSource) {
         logger.info("Revert DataSource : {} > {}", dataSource.dbShareField().getValue(), point.getSignature());

@@ -3,6 +3,7 @@ package com.tesla.cloud.core.config.mybatis;
 import com.github.pagehelper.PageHelper;
 import com.tesla.cloud.core.config.database.DynamicDataSource;
 import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -13,28 +14,26 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.bind.RelaxedPropertyResolver;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import javax.annotation.PostConstruct;
 import java.util.Properties;
 
 @Configuration
 @ConditionalOnClass({ SqlSessionFactory.class, SqlSessionFactoryBean.class })
-@EnableConfigurationProperties(MybatisProperties.class)
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
-public class MybatisAutoConfiguration {
+public class MybatisAutoConfiguration implements EnvironmentAware {
 
     public static final Logger _LOG = LoggerFactory.getLogger(MybatisAutoConfiguration.class);
 
-    @Autowired
-    private MybatisProperties properties;
+    private RelaxedPropertyResolver propertyResolver;
 
     @Autowired(required = false)
     private Interceptor[] interceptors;
@@ -42,55 +41,59 @@ public class MybatisAutoConfiguration {
     @Autowired
     private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-
-    @PostConstruct
-    public void checkConfigFileExists() {
-        if (this.properties.isCheckConfigLocation()) {
-            _LOG.info(" Check mybatis configuration ");
-            Resource resource = this.resourceLoader.getResource(this.properties.getConfig());
-            Assert.state(resource.exists(),"Cannot find config location: " + resource
-                            + " (please add config file or check your Mybatis configuration)");
-        }
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.propertyResolver = new RelaxedPropertyResolver(environment,"mybatis.");
     }
-
 
     @Bean(name = "sqlSessionFactory")
     @ConditionalOnMissingBean
-    public SqlSessionFactory sqlSessionFactory(DynamicDataSource dataSource) throws Exception {
-        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
-        factory.setDataSource(dataSource); //dataSource
-        if (StringUtils.hasText(this.properties.getConfig())) {
-            factory.setConfigLocation(this.resourceLoader.getResource(this.properties.getConfig()));
-        } else {
-            if (this.interceptors != null && this.interceptors.length > 0) {
-                factory.setPlugins(this.interceptors);
-            }
-            factory.setTypeAliasesPackage(this.properties.getTypeAliasesPackage());
-            factory.setTypeHandlersPackage(this.properties.getTypeHandlersPackage());
-            factory.setMapperLocations(this.properties.getMapperLocations());
+    public SqlSessionFactory sqlSessionFactory(DynamicDataSource dataSource){
+        Resource resource = null;
+        try {
+            SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+            factory.setDataSource(dataSource); //dataSource
+            //mybatis global configuration
+            //Assert.state(this.resourceLoader.getResource("classpath:mybatis/mybatis-config.xml"),
+            //"Cannot find config location: " + resource + " ,please add config file or check your Mybatis configuration)");
+            factory.setConfigLocation(this.resourceLoader.getResource("classpath:mybatis/mybatis-config.xml"));
+            // mybatis interceptors
+            factory.setPlugins(new Interceptor[]{ pageHelper() });
+            // typeAliasesPackage
+            factory.setTypeAliasesPackage(propertyResolver.getProperty("typeAliasesPackage"));
+            // mapperLocations
+            factory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(propertyResolver.getProperty("mapperLocations")));
+            // typeHandlersPackage
+            factory.setTypeHandlersPackage(propertyResolver.getProperty("typeHandlersPackage"));
+
+            return factory.getObject();
+
+        } catch (Exception e){
+            _LOG.error("Initialization sqlSessionFactory failed, " + e );
+            return null;
         }
-        return factory.getObject();
     }
 
     @Bean
     @ConditionalOnMissingBean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory,this.properties.getExecutorType());
+        return new SqlSessionTemplate(sqlSessionFactory,ExecutorType.SIMPLE);
     }
 
 
     @Bean
-    public PageHelper pageHelper(DynamicDataSource dataSource) {
+    public PageHelper pageHelper() {
         _LOG.info(" Register myBatis plugin the PageHelper. ");
         PageHelper pageHelper = new PageHelper();
-        Properties p = new Properties();
-        p.setProperty("offsetAsPageNum", "true");
-        p.setProperty("rowBoundsWithCount", "true");
-        p.setProperty("reasonable", "true");
-        pageHelper.setProperties(p);
+        Properties properties = new Properties();
+        properties.setProperty("offsetAsPageNum", "true");
+        properties.setProperty("rowBoundsWithCount", "true");
+        properties.setProperty("reasonable", "true");
+        properties.setProperty("supportMethodsArguments", "true");
+        properties.setProperty("returnPageInfo", "check");
+        properties.setProperty("params", "count=countSql");
+        pageHelper.setProperties(properties);
         return pageHelper;
     }
-
-
 
 }
