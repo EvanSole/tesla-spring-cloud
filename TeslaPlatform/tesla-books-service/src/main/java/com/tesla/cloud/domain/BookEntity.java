@@ -1,5 +1,9 @@
 package com.tesla.cloud.domain;
 
+
+import javax.persistence.Table;
+
+@Table(name = "t_books")
 public class BookEntity {
 
 

@@ -3,7 +3,7 @@ package com.tesla.cloud.core.config.database;
 
 public enum DbShareField {
 
-    DEFAULT("dataSource"),ORDER("order"),BOOKS("books");
+    MASTER("masterDataSource"),SLAVE("slaveDataSource");
 
     private String value;
 

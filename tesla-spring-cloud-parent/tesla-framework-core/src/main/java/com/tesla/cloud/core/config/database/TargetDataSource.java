@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface TargetDataSource {
 
-    DbShareField dbShareField() default DbShareField.DEFAULT;
+    DbShareField name() default DbShareField.MASTER;
 
 }

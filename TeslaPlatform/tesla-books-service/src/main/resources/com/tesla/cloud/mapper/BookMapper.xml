@@ -12,7 +12,7 @@
     </resultMap>
 
     <select id="queryByBookName" resultMap="BaseResultMap" parameterType="java.lang.String">
-        SELECT ID,BOOK_NAME,PUBLISHER,AUTHOR,DESCRIPTION FROM T_BOOK WHERE book_name LIKE CONCAT('%',#{bookName},'%')
+        SELECT ID,BOOK_NAME,PUBLISHER,AUTHOR,DESCRIPTION FROM t_books WHERE BOOK_NAME LIKE CONCAT('%',#{bookName},'%')
     </select>
 
 

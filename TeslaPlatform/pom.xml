@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.tesla.cloud</groupId>
     <artifactId>tesla-spring-cloud-parent</artifactId>
-    <version>1.0.19</version>
+    <version>1.0.21</version>
   </parent>
 
   <groupId>com.tesla.cloud</groupId>
@@ -26,7 +26,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tesla.framework.version>1.0.19</tesla.framework.version>
+    <tesla.framework.version>1.0.21</tesla.framework.version>
   </properties>
 
   <build>

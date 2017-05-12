@@ -2,12 +2,15 @@ spring:
   application:
     name: tesla-books-server
 
+  # 从配置中心读取配置
   cloud:
     config:
       profile: dev
       label: master
       uri: http://localhost:8770
       name: tesla-config
+      # discovery:
+       # service-id: tesla-config-server
 
   profiles:
     active: dev
@@ -17,6 +20,8 @@ management:
  security:
   enabled: false
 
+
+# eureka服务注册
 eureka:
   client:
     eureka-server-u-r-l-context: http://localhost:8761/eureka/

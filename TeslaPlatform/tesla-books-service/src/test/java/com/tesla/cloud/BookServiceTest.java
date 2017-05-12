@@ -19,11 +19,34 @@ public class BookServiceTest {
     @Autowired
     BookService bookService;
 
+
+    @Test
+    public void testGetBooks() throws Exception {
+        BookEntity bookEntity = new BookEntity();
+        bookEntity.setPublisher("电子工业出版社");
+        List<BookEntity> books = bookService.getBooks(bookEntity);
+        Assert.assertEquals(1, books.size());
+    }
+
+
     @Test
     public void testFindBooks() throws Exception {
         List<BookEntity> books = bookService.getAllBooks();
         //PageHelper.startPage(1,10);
-        Assert.assertEquals("1", books.size());
+        Assert.assertEquals(1, books.size());
     }
+
+
+    @Test
+    public void testAddBooks() throws Exception {
+        BookEntity bookEntity = new BookEntity();
+        bookEntity.setBookName("大型网站系统与Java中间件实践");
+        bookEntity.setAuthor("曾宪杰");
+        bookEntity.setPublisher("天津工业出版社");
+        bookEntity.setDescription("摩尔定律");
+        bookEntity.setId(2000L);
+        bookService.addBooks(bookEntity);
+    }
+
 
 }

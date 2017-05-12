@@ -35,9 +35,6 @@ public class MybatisAutoConfiguration implements EnvironmentAware {
 
     private RelaxedPropertyResolver propertyResolver;
 
-    @Autowired(required = false)
-    private Interceptor[] interceptors;
-
     @Autowired
     private ResourceLoader resourceLoader = new DefaultResourceLoader();
 

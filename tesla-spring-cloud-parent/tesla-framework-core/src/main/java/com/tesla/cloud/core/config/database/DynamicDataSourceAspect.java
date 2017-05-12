@@ -17,19 +17,19 @@ public class DynamicDataSourceAspect {
     //Before advice
     @Before("@annotation(dataSource)")
     public void changeDataSource(JoinPoint point, TargetDataSource dataSource) throws Throwable {
-        String dataSourceId = dataSource.dbShareField().getValue();
+        String dataSourceId = dataSource.name().getValue();
         if (!DataSourceContextHolder.containsDataSource(dataSourceId)) {
-            logger.info("The dataSource [{}] does not exist，use the default data source {}", dataSource.dbShareField().getValue(), point.getSignature());
+            logger.info("The dataSource [{}] does not exist，use the default data source {}", dataSource.name().getValue(), point.getSignature());
         } else {
-            logger.info("Use DataSource : {} > {}", dataSource.dbShareField().getValue(), point.getSignature());
-            DataSourceContextHolder.setDataSourceType(dataSource.dbShareField().getValue());
+            logger.info("Use DataSource : {} > {}", dataSource.name().getValue(), point.getSignature());
+            DataSourceContextHolder.setDataSourceType(dataSource.name().getValue());
         }
     }
 
     //after advice
     @After("@annotation(dataSource)")
     public void restoreDataSource(JoinPoint point, TargetDataSource dataSource) {
-        logger.info("Revert DataSource : {} > {}", dataSource.dbShareField().getValue(), point.getSignature());
+        logger.info("Revert DataSource : {} > {}", dataSource.name().getValue(), point.getSignature());
         DataSourceContextHolder.clearDataSourceType();
     }
 

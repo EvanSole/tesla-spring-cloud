@@ -26,38 +26,39 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
     private PropertyValues dataSourcePropertyValues;
 
     // 主数据源
-    private DataSource defaultDataSource;
+    private DataSource masterDataSource;
+    // 从数据源
+    private DataSource slaveDataSource;
+
     // 自定义数据源
     private Map<String, DataSource> customDataSources = new HashMap<>();
 
     @Override
     public void setEnvironment(Environment environment) {
-        initDefaultDataSource(environment);
-        initCustomDataSources(environment);
+        initMasterDataSource(environment);
+        initSlaveDataSource(environment);
     }
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
-        logger.info("Dynamic DataSource Registry.");
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
         // 将主数据源添加到容器中
-        targetDataSources.put("dataSource", defaultDataSource);
-        DataSourceContextHolder.dataSourceList.add("dataSource");
+        targetDataSources.put("masterDataSource", masterDataSource);
+        DataSourceContextHolder.dataSourceList.add("masterDataSource");
 
-        // 将自定义数据源添加到容器中
-        targetDataSources.putAll(customDataSources);
-        for (String key : customDataSources.keySet()) {
-            DataSourceContextHolder.dataSourceList.add(key);
-        }
+        //将从数据源放入容器中
+        targetDataSources.put("slaveDataSource",slaveDataSource);
+        DataSourceContextHolder.dataSourceList.add("slaveDataSource");
 
         // 创建DynamicDataSource
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         beanDefinition.setBeanClass(DynamicDataSource.class);
         beanDefinition.setSynthetic(true);
         MutablePropertyValues mpv = beanDefinition.getPropertyValues();
-        mpv.addPropertyValue("defaultTargetDataSource", defaultDataSource);
+        mpv.addPropertyValue("defaultTargetDataSource", masterDataSource);
         mpv.addPropertyValue("targetDataSources", targetDataSources);
         beanDefinitionRegistry.registerBeanDefinition("dataSource", beanDefinition);
+        logger.info("Dynamic DataSource Registry.");
     }
 
 
@@ -65,24 +66,48 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
      * 初始化默认连接(主数据源)
      * @param env
      */
-    private void initDefaultDataSource(Environment env) {
+    private void initMasterDataSource(Environment env) {
         try {
             //读取主数据源
-            RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(env, "spring.datasource.");
+            RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(env, "spring.master.datasource.");
             Map<String, Object> dsParam = new HashMap<>();
             dsParam.put("type", propertyResolver.getProperty("type"));
             dsParam.put("driver-class-name", propertyResolver.getProperty("driver-class-name"));
             dsParam.put("url", propertyResolver.getProperty("url"));
             dsParam.put("username", propertyResolver.getProperty("username"));
             dsParam.put("password", propertyResolver.getProperty("password"));
-            defaultDataSource = DruidDataSourceFactory.createDataSource(dsParam);
+            masterDataSource = DruidDataSourceFactory.createDataSource(dsParam);
             //绑定其它参数
-            dataBinder(defaultDataSource, env);
+            dataBinder(masterDataSource, env);
         }catch (Exception e){
             e.printStackTrace();
             logger.error("Initialize the dataSource failed." + e);
         }
     }
+
+    /***
+     * 初始化默认连接(从数据源)
+     * @param env
+     */
+    private void initSlaveDataSource(Environment env) {
+        try {
+            //读取主数据源
+            RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(env, "spring.slave.datasource.");
+            Map<String, Object> dsParam = new HashMap<>();
+            dsParam.put("type", propertyResolver.getProperty("type"));
+            dsParam.put("driver-class-name", propertyResolver.getProperty("driver-class-name"));
+            dsParam.put("url", propertyResolver.getProperty("url"));
+            dsParam.put("username", propertyResolver.getProperty("username"));
+            dsParam.put("password", propertyResolver.getProperty("password"));
+            slaveDataSource = DruidDataSourceFactory.createDataSource(dsParam);
+            //绑定其它参数
+            dataBinder(slaveDataSource, env);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("Initialize the dataSource failed." + e);
+        }
+    }
+
 
     /***
      * 初始化自定义连接(自定义数据源)
@@ -127,12 +152,6 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
         if(dataSourcePropertyValues == null){
             Map<String, Object> customParam = new RelaxedPropertyResolver(env, "spring.datasource").getSubProperties(".");
             Map<String, Object> values = new HashMap<>(customParam);
-            // 排除已经设置的属性
-            values.remove("type");
-            values.remove("driver-class-name");
-            values.remove("url");
-            values.remove("username");
-            values.remove("password");
             dataSourcePropertyValues = new MutablePropertyValues(values);
         }
         dataBinder.bind(dataSourcePropertyValues);
