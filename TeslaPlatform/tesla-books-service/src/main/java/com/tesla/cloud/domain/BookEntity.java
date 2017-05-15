@@ -1,20 +1,26 @@
 package com.tesla.cloud.domain;
 
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "t_books")
 public class BookEntity {
 
-
+    @Id
     private Long id;
 
+    @Column(name = "book_name")
     private String bookName;
 
+    @Column(name = "publisher")
     private String publisher;
 
+    @Column(name = "author")
     private String author;
 
+    @Column(name = "description")
     private String  description;
 
     public Long getId() {
@@ -56,6 +62,8 @@ public class BookEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 
 
     @Override

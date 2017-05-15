@@ -4,11 +4,11 @@
 <mapper namespace="com.tesla.cloud.mapper.BookMapper">
     <!-- type为实体类Book，包名已经配置，可以直接写类名 -->
     <resultMap id="BaseResultMap" type="BookEntity">
-        <id property="id" column="id" />
-        <result property="bookName" column="book_name" />
-        <result property="publisher" column="publisher" />
-        <result property="author" column="author" />
-        <result property="description" column="description" />
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="bookName" column="book_name" jdbcType="VARCHAR"/>
+        <result property="publisher" column="publisher" jdbcType="VARCHAR"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="queryByBookName" resultMap="BaseResultMap" parameterType="java.lang.String">

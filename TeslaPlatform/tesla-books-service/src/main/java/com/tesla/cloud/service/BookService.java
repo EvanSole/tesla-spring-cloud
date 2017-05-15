@@ -20,4 +20,7 @@ public interface BookService  {
 
     Integer removeBooks(Long  id);
 
+    List<BookEntity> getBooksByName(String bookName);
+
+
 }

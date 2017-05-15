@@ -20,7 +20,7 @@ public class BookServiceImpl implements BookService {
     @TargetDataSource(name = DbShareField.MASTER)
     @Override
     public List<BookEntity> getBooks(BookEntity bookEntity) {
-        return bookMapper.selectByExample(bookEntity);
+        return bookMapper.select(bookEntity);
     }
 
     //使用从数据源
@@ -45,6 +45,12 @@ public class BookServiceImpl implements BookService {
     @Override
     public Integer removeBooks(Long id) {
         return bookMapper.deleteByPrimaryKey(id);
+    }
+
+
+    @Override
+    public List<BookEntity> getBooksByName(String bookName) {
+        return bookMapper.queryByBookName(bookName);
     }
 
 }

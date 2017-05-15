@@ -1,6 +1,7 @@
 package com.tesla.cloud;
 
 
+import com.github.pagehelper.PageHelper;
 import com.tesla.cloud.domain.BookEntity;
 import com.tesla.cloud.service.BookService;
 import org.junit.Assert;
@@ -23,6 +24,7 @@ public class BookServiceTest {
     @Test
     public void testGetBooks() throws Exception {
         BookEntity bookEntity = new BookEntity();
+        //bookEntity.setId(2000L);
         bookEntity.setPublisher("电子工业出版社");
         List<BookEntity> books = bookService.getBooks(bookEntity);
         Assert.assertEquals(1, books.size());
@@ -30,9 +32,17 @@ public class BookServiceTest {
 
 
     @Test
-    public void testFindBooks() throws Exception {
+    public void testGetFindBooksByName() throws Exception {
+        PageHelper.startPage(1,10);
+        List<BookEntity> books = bookService.getBooksByName("《大型网站技术架构》");
+        Assert.assertEquals(1, books.size());
+    }
+
+
+    @Test
+    public void testGetAllBooks() throws Exception {
         List<BookEntity> books = bookService.getAllBooks();
-        //PageHelper.startPage(1,10);
+        PageHelper.startPage(1,1);
         Assert.assertEquals(1, books.size());
     }
 
