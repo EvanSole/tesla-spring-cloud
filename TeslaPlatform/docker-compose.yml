@@ -1,0 +1,13 @@
+tesla-config-server:
+  image: ./tesla-spring-cloud-config
+  ports:
+    - "8770:8770"
+   links:
+    - tesla-spring-cloud-eureka
+
+tesla-books-server:
+  image: ./tesla-books-server
+  ports:
+    - "8882:8882"
+   links:
+    - tesla-spring-cloud-eureka

@@ -6,4 +6,4 @@ ADD ./target/tesla-config-server-1.0-SNAPSHOT.jar /app/
 
 CMD ["java","-Xmx256M","-jar","/app/tesla-config-server-1.0-SNAPSHOT.jar"]
 
-EXPOSE 8701
+EXPOSE 8770
